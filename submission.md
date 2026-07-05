@@ -55,3 +55,7 @@ No route touches `db.session` for business logic directly except `users.py`'s `g
 - **No serializer layer — `to_dict()` on the model is the API shape.** Whatever fields `to_dict()` includes are exactly what's exposed over HTTP; there's no separate DTO/view model.
 - **Feature logic is grouped by "what it's about," not by CRUD verb**, and that grouping doesn't perfectly match file names: `rate_song` and `add_to_playlist` (which sound like they belong in a "ratings" or "playlists" service) actually live in `notification_service.py`, because the unifying theme of that file is "actions that can produce a notification," not "notification CRUD." Anyone editing playlist or rating behavior needs to know to look there too.
 - **IDs are UUID strings everywhere** (`generate_uuid()` default on every model), not auto-incrementing integers, and association tables that need extra metadata (`playlist_entries`) are defined as raw `db.Table` objects rather than mapped classes, while simpler joins (`friendships`, `song_tags`) are also raw tables even though they carry no extra columns — the project doesn't use the SQLAlchemy association-object pattern anywhere.
+
+## AI Usage
+
+I used AI to write a test for the bug in `streak_service.py`. I prompted it to generate a test that would fail with the current implementation of `update_listening_streak()` and pass with the correct implementation. I then ran the test to confirm that it failed, fixed the bug, and ran the test again to confirm that it passed.
